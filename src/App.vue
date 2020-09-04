@@ -1,28 +1,48 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Answers v-on:pushAnswer="receiveAnswer($event)" v-show="!inGame" />
+    <Settings v-bind:answers="answers" v-on:pushSettings="receiveSettings($event)" v-show="!inGame" />
+    <Gameplay v-bind:answers="answers" v-bind:settings="settings" v-show="inGame" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Answers from './components/Answers.vue'
+import Settings from './components/Settings.vue'
+import Gameplay from './components/Gameplay.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Answers,
+    Settings,
+    Gameplay
+  },
+  data() {
+    return {
+      answers: [],
+      settings: {
+        rounds: null,
+        turnTime: null
+      },
+      inGame: false
+    }
+  },
+  methods: {
+    receiveAnswer(newAnswer) {
+      this.answers.push(newAnswer);
+      console.log(this.answers);
+    },
+    receiveSettings(gameSettings) {
+      this.settings.rounds = gameSettings.rounds;
+      this.settings.turnTime = gameSettings.turnTime;
+      this.inGame = true;
+      console.log(this.settings);
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
