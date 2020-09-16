@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <Answers v-on:pushAnswer="receiveAnswer($event)" v-show="!inGame" />
+    <Answers v-on:pushAnswer="receiveAnswers($event)" v-show="!inGame" />
     <Settings v-bind:answers="answers" v-on:pushSettings="receiveSettings($event)" v-show="!inGame" />
+    <Timer v-bind:settings="settings" v-show="inGame" />
     <Gameplay v-bind:answers="answers" v-bind:settings="settings" v-show="inGame" />
   </div>
 </template>
@@ -10,13 +11,15 @@
 import Answers from './components/Answers.vue'
 import Settings from './components/Settings.vue'
 import Gameplay from './components/Gameplay.vue'
+import Timer from './components/Timer.vue'
 
 export default {
   name: 'App',
   components: {
     Answers,
     Settings,
-    Gameplay
+    Gameplay,
+    Timer
   },
   data() {
     return {
@@ -29,7 +32,7 @@ export default {
     }
   },
   methods: {
-    receiveAnswer(newAnswer) {
+    receiveAnswers(newAnswer) {
       this.answers.push(newAnswer);
       console.log(this.answers);
     },
