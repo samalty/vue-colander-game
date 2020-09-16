@@ -31,7 +31,7 @@ export default {
       } else {
         alert("The form field is empty.");
       }
-      this.answer = null
+      this.answer = null;
     }
   }
 }
