@@ -44,9 +44,9 @@ export default {
         }
         //console.log(gameSettings);
         this.$emit('pushSettings', gameSettings);
-        //let answers = this.answers;
+        let answers = this.answers;
         //eventBus.$emit('gameplay', gameSettings);
-        //eventBus.$emit('gameplay', answers);
+        this.$emit('gameplay', answers);
       } else {
         alert("There must be at least 3 items in the colander in order to play. You currently have " + this.answers.length + " items.");
       }

@@ -1,11 +1,12 @@
 <template>
   <div>
-    <p>Timer</p>
-    <p>{{ seconds }}</p>
+    <h5>Timer</h5>
+    <p>{{ timer }}</p>
   </div>
 </template>
 
 <script>
+import { EventBus } from '../main';
 export default {
   name: 'Timer',
   props: {
@@ -16,17 +17,28 @@ export default {
   },
   data() {
     return {
-      seconds: 30
+      count: 30,
+      displaySeconds: 30,
+      inTurn: false
     }
   },
-  methods: {
+  computed: {
     timer() {
-        this.seconds = this.settings.turnTime;
-        this.seconds--;
-        //if (this.seconds === 0) {
-
-        //}
+      const timeRemaining = this.count;
+      const minutes = Math.floor(timeRemaining / 60);
+      let seconds = timeRemaining % 60;
+      (seconds < 10) ? seconds = `0${seconds}` : '' ;
+      return `${minutes}:${seconds}`;
     }
+  },
+  created() {
+    EventBus.$on('stopWatch', (data) => {
+      // Receive current answer from Gameplay component and update score
+      this.inTurn = data;
+      if (this.inTurn == true) {
+        this.seconds--;
+      }
+    });
   }
 }
 </script>

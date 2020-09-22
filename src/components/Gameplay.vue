@@ -1,20 +1,13 @@
 <template>
   <div>
     <div>
-        <h5>Team A</h5>
-        <h5>{{ teamAScore }}</h5>
-    </div>
-    <div>
-        <h5>Team B</h5>
-        <h5>{{ teamBScore }}</h5>
-    </div>
-    <div>
         <h5>{{ rounds[round] }}</h5>
     </div>
     <div>
         <h5>{{ answer }}</h5>
     </div>
-    <button v-on:click="onGot" id="goBtn">Go!</button>
+    <button v-on:click="onGo">Go!</button>
+    <button v-on:click="onGot" id="goBtn">Got</button>
     <button v-on:click="onPass" id="passBtn">Pass</button>
     <button v-on:click="onNextTurn">Next Player</button>
     <button v-on:click="onNextRound" v-show="betweenRounds">Next Round</button>
@@ -22,6 +15,7 @@
 </template>
 
 <script>
+import { EventBus } from '../main';
 export default {
   name: 'Gameplay',
   props: {
@@ -38,24 +32,27 @@ export default {
     return {
       rounds: ['Round 1: Articulate', 'Round 2: Charades', 'Round 3: Articulate V2', 'Round 4: Charades V2'],
       round: 0,
-      turn: 1,
-      teamAScore: 0,
-      teamBScore: 0,
       answer: 'Ready?',
       answerIndex: null,
       prevAnswerIndex: null,
       answered: [],
       passed: [],
-      betweenRounds: false
+      betweenRounds: false,
+      onTheClock: false,
     }
   },
   methods: {
 
+    onGo() {
+      this.onTheClock = !this.onTheClock;
+      console.log(this.onTheClock);
+      EventBus.$emit('stopwatch', this.onTheClock);
+    },
+
     onGot() {
-      if (this.answer != 'Ready?') {
-        // Increment score for active team upon correct answer
-        this.turn % 2 != 0 ? this.teamAScore++ : this.teamBScore++ ;
-      }
+      // Emit answer to Scores component to update scores
+      EventBus.$emit('newAnswer', this.answer);
+
       // Overwrite prevAnswerIndex for splicing answers array
       this.prevAnswerIndex = this.answerIndex;
 
@@ -111,7 +108,8 @@ export default {
     },
 
     onNextTurn() {
-      this.turn++;
+      // Use eventbus to trigger method in Scores component
+      EventBus.$emit('nextTurn');
     },
 
     onNextRound() {
