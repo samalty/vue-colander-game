@@ -52,9 +52,8 @@ export default {
         this.onTheClock = !this.onTheClock;
         this.time = this.settings.turnTime;
         console.log(this.onTheClock);
-        // Randomise new item from answers array
-        this.answerIndex = Math.floor(Math.random() * this.answers.length);
-        this.answer = this.answers[this.answerIndex];
+        // Call randomise function to return answer
+        this.randomise();
         // Initiate timer
         this.timer();
       } else {
@@ -75,6 +74,17 @@ export default {
       }
     },
 
+    pause() {
+      console.log('inside pause function')
+      clearTimeout(this.time);
+    },
+
+    randomise() {
+      // Randomise new item from answers array
+      this.answerIndex = Math.floor(Math.random() * this.answers.length);
+      this.answer = this.answers[this.answerIndex];
+    },
+
     onGot() {
       // Emit answer to Scores component to update scores
       EventBus.$emit('newAnswer', this.answer);
@@ -91,9 +101,8 @@ export default {
       console.log(this.answers);
       console.log(this.answered);
       if (this.answers.length > 0) {
-        // Randomise new item from answers array
-        this.answerIndex = Math.floor(Math.random() * this.answers.length);
-        this.answer = this.answers[this.answerIndex];
+        // Call randomise function to return answer
+        this.randomise();
       } else {
         if (this.round < this.settings.rounds-1) {
           this.answer = "Colander is empty. Click 'next round' to resume.";
@@ -126,9 +135,8 @@ export default {
         // Remove answered item from answered array and push into passed array
         (this.prevAnswerIndex) != null ? this.passed.push(this.answers.splice(this.prevAnswerIndex, 1)) : '' ;
         console.log('Passed array ' + this.passed)
-        // Randomise new item from answers array
-        this.answerIndex = Math.floor(Math.random() * this.answers.length);
-        this.answer = this.answers[this.answerIndex];
+        // Call randomise function to return answer
+        this.randomise();
         document.getElementById("passBtn").disabled = true;
       }
     },

@@ -15,10 +15,6 @@
 import { EventBus } from '../main';
 export default {
   name: 'Scores',
-  answer: {
-    type: String,
-    required: true
-  },
   data() {
     return {
       turn: 1,
@@ -30,16 +26,17 @@ export default {
 
   //},
   created() {
-      EventBus.$on('newAnswer', (data) => {
-          this.answer = data;
-          console.log(this.answer + ' answer')
-          if (this.answer != 'Ready?') {
-            this.turn % 2 != 0 ? this.teamAScore++ : this.teamBScore++ ;
-          }
-      });
-      EventBus.$on('nextTurn', () => {
-          this.turn++;
-      });
+    EventBus.$on('newAnswer', (data) => {
+      // Receive current answer from Gameplay component and update score
+      this.answer = data;
+      if (this.answer != 'Ready?') {
+        this.turn % 2 != 0 ? this.teamAScore++ : this.teamBScore++ ;
+      }
+    });
+    EventBus.$on('nextTurn', () => {
+      // Update turn when button in gameplay component is clicked
+      this.turn++;
+    });
   }
 }
 </script>
