@@ -6,8 +6,10 @@
     <div>
         <h5>{{ answer }}</h5>
     </div>
-    <button v-on:click="onGo">Go!</button>
-    <button v-on:click="onGot" id="goBtn">Got</button>
+    <div>
+        <h5>{{ time }}</h5>
+    </div>
+    <button v-on:click="onGo" id="gotBtn">Go!</button>
     <button v-on:click="onPass" id="passBtn">Pass</button>
     <button v-on:click="onNextTurn">Next Player</button>
     <button v-on:click="onNextRound" v-show="betweenRounds">Next Round</button>
@@ -39,14 +41,38 @@ export default {
       passed: [],
       betweenRounds: false,
       onTheClock: false,
+      time: null
     }
   },
   methods: {
 
     onGo() {
-      this.onTheClock = !this.onTheClock;
-      console.log(this.onTheClock);
-      EventBus.$emit('stopwatch', this.onTheClock);
+      if (this.onTheClock == false) {
+
+        this.onTheClock = !this.onTheClock;
+        this.time = this.settings.turnTime;
+        console.log(this.onTheClock);
+        // Randomise new item from answers array
+        this.answerIndex = Math.floor(Math.random() * this.answers.length);
+        this.answer = this.answers[this.answerIndex];
+        // Initiate timer
+        this.timer();
+      } else {
+        // Call onGot function if round is in progress
+        this.onGot();
+      }
+    },
+
+    timer() {
+      if (this.time > 0) {
+        setTimeout(() => {
+          this.time--;
+          this.timer()
+        }, 1000)
+      } else {
+        this.time = "Time's up!";
+        this.onTheClock = !this.onTheClock;
+      }
     },
 
     onGot() {
@@ -87,7 +113,7 @@ export default {
         }
         this.answerIndex = null;
         this.prevAnswerIndex = null;
-        document.getElementById("goBtn").disabled = true;
+        document.getElementById("gotBtn").disabled = true;
       }
     },
 
@@ -115,7 +141,7 @@ export default {
     onNextRound() {
       this.round++;
       this.betweenRounds = false;
-      document.getElementById("goBtn").disabled = false;
+      document.getElementById("gotBtn").disabled = false;
       this.answer = 'Ready?';
       this.answers = this.answered;
       this.answered = [];
