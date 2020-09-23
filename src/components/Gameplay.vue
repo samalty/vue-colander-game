@@ -11,7 +11,7 @@
     </div>
     <button v-on:click="onGo" id="gotBtn">Go!</button>
     <button v-on:click="onPass" id="passBtn">Pass</button>
-    <button v-on:click="onNextTurn">Next Player</button>
+    <button v-on:click="onNextTurn" id="nextBtn">Next Player</button>
     <button v-on:click="onNextRound" v-show="betweenRounds">Next Round</button>
   </div>
 </template>
@@ -48,7 +48,6 @@ export default {
 
     onGo() {
       if (this.onTheClock == false) {
-
         this.onTheClock = !this.onTheClock;
         this.time = this.settings.turnTime;
         console.log(this.onTheClock);
@@ -67,16 +66,16 @@ export default {
         setTimeout(() => {
           this.time--;
           this.timer()
-        }, 1000)
-      } else {
-        this.time = "Time's up!";
-        this.onTheClock = !this.onTheClock;
-      }
+        }, 100)
+      } else this.timeOut();
     },
 
-    pause() {
-      console.log('inside pause function')
-      clearTimeout(this.time);
+    timeOut() {
+      this.time = "Time's up! Next player's turn.";
+      this.onTheClock = !this.onTheClock;
+      document.getElementById("gotBtn").disabled = true;
+      document.getElementById("passBtn").disabled = true;
+      document.getElementById("nextBtn").disabled = false;
     },
 
     randomise() {
@@ -93,77 +92,81 @@ export default {
       this.prevAnswerIndex = this.answerIndex;
 
       // Remove answered item from answers array and push into answered array
-      //(this.prevAnswerIndex) != null ? this.answered.push(this.answers.splice(this.prevAnswerIndex, 1)) : '' ;
       if (this.prevAnswerIndex != null) {
         this.answered.push(this.answers[this.prevAnswerIndex]);
         this.answers.splice(this.prevAnswerIndex, 1);
       }
       console.log(this.answers);
       console.log(this.answered);
+
       if (this.answers.length > 0) {
         // Call randomise function to return answer
         this.randomise();
+      } else if (this.passed.length > 0) {
+        // Push passed item back into answers if no other remaining items
+        this.answers.push(this.passed[0]);
+        this.passed.splice(0, 1);
+        this.randomise();
       } else {
-        if (this.round < this.settings.rounds-1) {
-          this.answer = "Colander is empty. Click 'next round' to resume.";
-          this.betweenRounds = true;
-        } else {
-          switch (true) {
-            case (this.teamAScore > this.teamBScore):
-              this.answer = 'Game over. Team A wins!';
-              break;
-            case (this.teamAScore < this.teamBScore):
-              this.answer = 'Game over. Team B wins!';
-              break;
-            case (this.teamAScore == this.teamBScore):
-              this.answer = "Game over. It's a draw!";
-              break;
-          }
-        }
-        this.answerIndex = null;
-        this.prevAnswerIndex = null;
-        document.getElementById("gotBtn").disabled = true;
+        this.endRound();
       }
     },
 
-    onPass() {
-      if (this.passed.length == 1) {
-        console.log('Too many items')
+    endRound() {
+      if (this.round < this.settings.rounds-1) {
+        this.answer = "Colander is empty. Click 'next round' to resume.";
+        this.betweenRounds = true;
       } else {
+        switch (true) {
+          case (this.teamAScore > this.teamBScore):
+            this.answer = 'Game over. Team A wins!';
+            break;
+          case (this.teamAScore < this.teamBScore):
+            this.answer = 'Game over. Team B wins!';
+            break;
+          case (this.teamAScore == this.teamBScore):
+            this.answer = "Game over. It's a draw!";
+            break;
+        }
+      }
+      this.answerIndex = null;
+      this.prevAnswerIndex = null;
+      document.getElementById("gotBtn").disabled = true;
+    },
+
+    onPass() {
+      //if (this.passed.length == 1) {
+      //  document.getElementById("passBtn").disabled = true;
+      //} else {
         // Overwrite prevAnswerIndex for splicing answers array
         this.prevAnswerIndex = this.answerIndex;
         // Remove answered item from answered array and push into passed array
         (this.prevAnswerIndex) != null ? this.passed.push(this.answers.splice(this.prevAnswerIndex, 1)) : '' ;
-        console.log('Passed array ' + this.passed)
+        console.log(this.passed[0])
         // Call randomise function to return answer
         this.randomise();
+        // Disable button to prevent further passes
         document.getElementById("passBtn").disabled = true;
-      }
+      //}
     },
 
     onNextTurn() {
       // Use eventbus to trigger method in Scores component
       EventBus.$emit('nextTurn');
+      document.getElementById("gotBtn").disabled = false;
+      document.getElementById("passBtn").disabled = false;
+      document.getElementById("nextBtn").disabled = true;
     },
 
     onNextRound() {
       this.round++;
       this.betweenRounds = false;
       document.getElementById("gotBtn").disabled = false;
+      document.getElementById("passBtn").disabled = false;
       this.answer = 'Ready?';
       this.answers = this.answered;
       this.answered = [];
     }
-  //},
-  //computed: {
-  //  onNextRound() {
-  //    this.round++;
-  //    this.answer = "Ready?";
-  //    // Refill answers array for next round
-  //    this.answers = this.answered.slice();
-  //    this.answered.splice(0, this.answered.length);
-  //    console.log(this.answers);
-  //  }
   }
 }
 </script>
