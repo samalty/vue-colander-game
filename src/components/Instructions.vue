@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <p>Separate yourselves into two teams. Ideally you'll have at least three players on each side.</p>
         <p>Have everybody add a number of items to the colander. You can add whatever you want (e.g. the name of a film, a celebrity, an adjective etc.) just as long as it's realistically possible to describe.</p>
         <p>How many items each person adds is up to your discretion, but typically this will be between two and four.</p>
@@ -24,9 +24,17 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .container{
+    background-color: #668899;
+    padding: 5px 15px;
+    margin: 0;
+  }
+
   p{
     font-family: 'Bree Serif', serif;
     color: #ffffff;
     text-shadow: 2px 2px 3px rgba(0,0,0,0.7);
+    text-align: left;
   }
+
 </style>

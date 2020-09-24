@@ -47,13 +47,11 @@ export default {
   methods: {
     receiveAnswers(newAnswer) {
       this.answers.push(newAnswer);
-      console.log(this.answers);
     },
     receiveSettings(gameSettings) {
       this.settings.rounds = gameSettings.rounds;
       this.settings.turnTime = gameSettings.turnTime;
       this.inGame = true;
-      console.log(this.settings);
     }
   }
 }

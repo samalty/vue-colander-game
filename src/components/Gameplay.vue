@@ -31,7 +31,7 @@
       <button v-on:click="onNextRound"
               class="button"
               id="nextRoundBtn"
-              v-show="betweenRounds">Next Round >></button>
+              v-show="betweenRounds">{{ nextBtnText }}</button>
     </div>
   </div>
 </template>
@@ -56,6 +56,7 @@ export default {
       round: 0,
       answer: 'Ready?',
       btnText: 'Go!',
+      nextBtnText: 'Next round >>',
       answerIndex: null,
       prevAnswerIndex: null,
       answered: [],
@@ -66,22 +67,21 @@ export default {
       count: undefined,
       canGo: true,
       canPass: false,
-      canNextTurn: false
+      canNextTurn: false,
+      gameOver: false
     }
   },
   methods: {
 
     onGo() {
       if (this.onTheClock == false) {
-        this.onTheClock = !this.onTheClock;
+        this.onTheClock = true;
         // Establish time limit if null
         (this.time == null) ? this.time = this.settings.turnTime : '' ;
         this.btnText = 'Got';
-        // Enable pass button
         this.canPass = true;
-        // Call randomise function to return answer
+        // Call randomise function to return answer and initiate timer
         this.randomise();
-        // Initiate timer
         this.startTime();
       } else {
         // Call onGot function if round is in progress
@@ -100,8 +100,7 @@ export default {
 
     stopTime() {
       clearInterval(this.count);
-      console.log(this.time + ' time');
-      this.onTheClock = !this.onTheClock;
+      this.onTheClock = false;
     },
 
     timeOut() {
@@ -146,10 +145,11 @@ export default {
     },
 
     endRound() {
+      this.betweenRounds = true;
       if (this.round < this.settings.rounds-1) {
         this.answer = "Colander is empty. Click 'next round' to resume.";
-        this.betweenRounds = true;
       } else {
+        this.nextBtnText = 'Home';
         switch (true) {
           case (this.teamAScore > this.teamBScore):
             this.answer = 'Game over. Team A wins!';
@@ -164,7 +164,6 @@ export default {
       }
       this.answerIndex = null;
       this.prevAnswerIndex = null;
-      document.getElementById("gotBtn").disabled = true;
     },
 
     onPass() {
@@ -192,15 +191,15 @@ export default {
     },
 
     onNextRound() {
-      this.round++;
-      this.betweenRounds = false;
-      this.btnText = 'Go!';
-      this.answer = 'Ready?';
-      this.answers = this.answered;
-      this.answered = [];
-      this.canGo = true;
-      this.canPass = false;
-      console.log(this.canGo)
+      if (this.round < this.settings.rounds-1) {
+        this.round++;
+        this.betweenRounds = false;
+        this.btnText = 'Go!';
+        this.answer = 'Ready?';
+        this.answers = this.answered;
+        this.answered = [];
+        this.canPass = false;
+      } else location.reload();
     }
   }
 }
