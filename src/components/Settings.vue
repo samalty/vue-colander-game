@@ -60,4 +60,51 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  form{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+  }
+
+  input[type=radio]{
+    opacity: 0;
+    width: 0;
+    margin: 0;
+  }
+
+  label[for="three"],
+  label[for="four"],
+  label[for="thirty"],
+  label[for="fourtyfive"],
+  label[for="sixty"]{
+    font-family: 'Bree Serif', serif;
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    background-image: linear-gradient(#990000, #cc0000);
+  }
+
+  label[for="three"],
+  label[for="four"]{
+    width: 230px;
+    margin: 5px;
+  }
+
+  label[for="thirty"],
+  label[for="fourtyfive"],
+  label[for="sixty"]{
+    width: 50px;
+    margin: 7px;
+  }
+
+  input:checked + label[for="three"],
+  input:checked + label[for="four"],
+  input:checked + label[for="thirty"],
+  input:checked + label[for="fourtyfive"],
+  input:checked + label[for="sixty"]{
+    background-image: linear-gradient(#008800, #00b300);
+  }
+
 </style>

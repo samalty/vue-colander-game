@@ -17,16 +17,16 @@
 
 <script>
 export default {
-  name: 'Instructions',
-  data() {
-    return {
-
-    }
-  }
+  name: 'Instructions'
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  p{
+    font-family: 'Bree Serif', serif;
+    color: #ffffff;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.7);
+  }
 </style>

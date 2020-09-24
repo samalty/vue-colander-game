@@ -71,4 +71,24 @@ export default {
     height: auto;
     margin: auto;
   }
+
+  h1,h2,h3,h4,h5,p{
+    font-family: 'Bree Serif', serif;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.7);
+  }
+
+  input[type=submit]{
+    font-size: 18px;
+    font-family: 'Bree Serif', serif;
+    padding: 5px;
+    width: 75%;
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+    color: #ffffff;
+    background-image: linear-gradient(#cc7a00, #ff9900);
+    cursor: pointer;
+  }
+
 </style>

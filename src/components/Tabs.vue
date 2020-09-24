@@ -3,7 +3,8 @@
     <header class="tab">
       <ul>
         <li v-for="(tab, index) in tabs" :key="index">
-          <div :class="{ 'is-active': tab.isActive }"
+          <div class="nav-item"
+               :class="{ 'is-active': tab.isActive }"
                v-on:click="selectTab(tab)">
             {{ tab.name }}
           </div>
@@ -42,7 +43,6 @@ export default {
 <style scoped>
 
   .tab{
-    color: white;
     border-bottom: 1px solid #ffffff;
     margin: 0 10px;
   }
@@ -58,7 +58,23 @@ export default {
   }
 
   li{
+    font-family: 'Bree Serif', serif;
+    font-size: 20px;
+    color: #ffffff;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.7);
     margin: auto;
+  }
+
+  .nav-item{
+    color: #ffffff;
     cursor: pointer;
+  }
+
+  .nav-item:hover{
+    color: #d3d3d3;
+  }
+
+  .nav-item:is-active{
+    color: red;
   }
 </style>

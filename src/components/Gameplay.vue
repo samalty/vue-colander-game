@@ -1,18 +1,38 @@
 <template>
   <div>
     <div>
-        <h5>{{ rounds[round] }}</h5>
+        <p class="round">{{ rounds[round] }}</p>
     </div>
     <div>
-        <h5>{{ answer }}</h5>
+        <p class="answers">{{ answer }}</p>
     </div>
     <div>
-        <h5>{{ time }}</h5>
+        <p class="timer">{{ time }}</p>
     </div>
-    <button v-on:click="onGo" id="gotBtn" v-show="!betweenRounds">{{ btnText }}</button>
-    <button v-on:click="onPass" id="passBtn" v-show="!betweenRounds">Pass</button>
-    <button v-on:click="onNextTurn" id="nextBtn" v-show="!betweenRounds">Next Player</button>
-    <button v-on:click="onNextRound" v-show="betweenRounds">Next Round</button>
+    <div class="buttons">
+      <button v-on:click="onGo"
+              v-bind:disabled="!canGo"
+              v-bind:class="{ disabled: !canGo }"
+              class="button"
+              id="gotBtn"
+              v-show="!betweenRounds">{{ btnText }}</button>
+      <button v-on:click="onPass"
+              v-bind:disabled="!canPass"
+              v-bind:class="{ disabled: !canPass }"
+              class="button"
+              id="passBtn"
+              v-show="!betweenRounds">Pass</button>
+      <button v-on:click="onNextTurn"
+              v-bind:disabled="!canNextTurn"
+              v-bind:class="{ disabled: !canNextTurn }"
+              class="button"
+              id="nextBtn"
+              v-show="!betweenRounds">Next Player</button>
+      <button v-on:click="onNextRound"
+              class="button"
+              id="nextRoundBtn"
+              v-show="betweenRounds">Next Round >></button>
+    </div>
   </div>
 </template>
 
@@ -43,8 +63,10 @@ export default {
       betweenRounds: false,
       onTheClock: false,
       time: null,
-      elapsedTime: 0,
-      count: undefined
+      count: undefined,
+      canGo: true,
+      canPass: false,
+      canNextTurn: false
     }
   },
   methods: {
@@ -56,7 +78,7 @@ export default {
         (this.time == null) ? this.time = this.settings.turnTime : '' ;
         this.btnText = 'Got';
         // Enable pass button
-        document.getElementById("passBtn").disabled = false;
+        this.canPass = true;
         // Call randomise function to return answer
         this.randomise();
         // Initiate timer
@@ -72,7 +94,7 @@ export default {
         this.count = setTimeout(() => {
           this.time--;
           this.startTime()
-        }, 1000)
+        }, 100)
       } else this.timeOut();
     },
 
@@ -83,11 +105,11 @@ export default {
     },
 
     timeOut() {
-      this.time = "Time's up! Next player's turn.";
+      this.answer = "Time's up! Next player's turn.";
       this.onTheClock = !this.onTheClock;
-      document.getElementById("gotBtn").disabled = true;
-      document.getElementById("passBtn").disabled = true;
-      document.getElementById("nextBtn").disabled = false;
+      this.canGo = !this.canGo;
+      this.canPass = false;
+      this.canNextTurn = !this.canNextTurn;
     },
 
     randomise() {
@@ -108,8 +130,6 @@ export default {
         this.answered.push(this.answers[this.prevAnswerIndex]);
         this.answers.splice(this.prevAnswerIndex, 1);
       }
-      console.log(this.answers);
-      console.log(this.answered);
 
       if (this.answers.length > 0) {
         // Call randomise function to return answer
@@ -148,19 +168,15 @@ export default {
     },
 
     onPass() {
-      //if (this.passed.length == 1) {
-      //  document.getElementById("passBtn").disabled = true;
-      //} else {
-        // Overwrite prevAnswerIndex for splicing answers array
-        this.prevAnswerIndex = this.answerIndex;
-        // Remove answered item from answered array and push into passed array
-        (this.prevAnswerIndex) != null ? this.passed.push(this.answers.splice(this.prevAnswerIndex, 1)) : '' ;
-        console.log(this.passed[0])
-        // Call randomise function to return answer
-        this.randomise();
-        // Disable button to prevent further passes
-        document.getElementById("passBtn").disabled = true;
-      //}
+      // Overwrite prevAnswerIndex for splicing answers array
+      this.prevAnswerIndex = this.answerIndex;
+      // Remove answered item from answered array and push into passed array
+      (this.prevAnswerIndex) != null ? this.passed.push(this.answers.splice(this.prevAnswerIndex, 1)) : '' ;
+      console.log(this.passed[0])
+      // Call randomise function to return answer
+      this.randomise();
+      // Disable button to prevent further passes
+      this.canPass = !this.canPass;
     },
 
     onNextTurn() {
@@ -169,9 +185,10 @@ export default {
       // Reset time limit
       this.time = this.settings.turnTime;
       this.btnText = 'Go!';
-      document.getElementById("gotBtn").disabled = false;
-      document.getElementById("passBtn").disabled = false;
-      document.getElementById("nextBtn").disabled = true;
+      this.answer = 'Ready?';
+      this.canGo = !this.canGo;
+      this.canPass = !this.canPass;
+      this.canNextTurn = !this.canNextTurn;
     },
 
     onNextRound() {
@@ -181,8 +198,9 @@ export default {
       this.answer = 'Ready?';
       this.answers = this.answered;
       this.answered = [];
-      document.getElementById("gotBtn").disabled = false;
-      document.getElementById("passBtn").disabled = false;
+      this.canGo = true;
+      this.canPass = false;
+      console.log(this.canGo)
     }
   }
 }
@@ -190,5 +208,67 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .round{
+    color: #ffff00;
+    font-size: 30px;
+    transition: 0.5s;
+  }
+
+  .answers,
+  .timer{
+    font-size: 36px;
+  }
+
+  .buttons{
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+  }
+
+  .button{
+    font-size: 18px;
+    font-family: 'Bree Serif', serif;
+    box-sizing: border-box;
+    width: 48%;
+    padding: 20px;
+    margin: 3px;
+    color: #ffffff;
+    border-radius: 5%;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+
+  #gotBtn{
+    background-image: linear-gradient(#008800, #00b300);
+    width: 99%;
+    margin: auto;
+    border: 3px solid #00b300;
+  }
+
+  #passBtn{
+    background-image: linear-gradient(#990000, #cc0000);
+    border: 3px solid #cc0000;
+  }
+
+  #nextBtn{
+    background-image: linear-gradient(#cc7a00, #ff9900);
+    float: right;
+    border: 3px solid #ff9900;
+  }
+
+  #nextRoundBtn{
+    background-image: linear-gradient(#cc7a00, #ff9900);
+    width: 99%;
+    margin: auto;
+    border: 3px solid #ff9900;
+  }
+
+  .disabled{
+    color: #999999;
+    transition: 0.5s;
+  }
 
 </style>
