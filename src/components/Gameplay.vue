@@ -9,9 +9,9 @@
     <div>
         <h5>{{ time }}</h5>
     </div>
-    <button v-on:click="onGo" id="gotBtn">Go!</button>
-    <button v-on:click="onPass" id="passBtn">Pass</button>
-    <button v-on:click="onNextTurn" id="nextBtn">Next Player</button>
+    <button v-on:click="onGo" id="gotBtn" v-show="!betweenRounds">{{ btnText }}</button>
+    <button v-on:click="onPass" id="passBtn" v-show="!betweenRounds">Pass</button>
+    <button v-on:click="onNextTurn" id="nextBtn" v-show="!betweenRounds">Next Player</button>
     <button v-on:click="onNextRound" v-show="betweenRounds">Next Round</button>
   </div>
 </template>
@@ -35,13 +35,16 @@ export default {
       rounds: ['Round 1: Articulate', 'Round 2: Charades', 'Round 3: Articulate V2', 'Round 4: Charades V2'],
       round: 0,
       answer: 'Ready?',
+      btnText: 'Go!',
       answerIndex: null,
       prevAnswerIndex: null,
       answered: [],
       passed: [],
       betweenRounds: false,
       onTheClock: false,
-      time: null
+      time: null,
+      elapsedTime: 0,
+      count: undefined
     }
   },
   methods: {
@@ -49,25 +52,34 @@ export default {
     onGo() {
       if (this.onTheClock == false) {
         this.onTheClock = !this.onTheClock;
-        this.time = this.settings.turnTime;
-        console.log(this.onTheClock);
+        // Establish time limit if null
+        (this.time == null) ? this.time = this.settings.turnTime : '' ;
+        this.btnText = 'Got';
+        // Enable pass button
+        document.getElementById("passBtn").disabled = false;
         // Call randomise function to return answer
         this.randomise();
         // Initiate timer
-        this.timer();
+        this.startTime();
       } else {
         // Call onGot function if round is in progress
         this.onGot();
       }
     },
 
-    timer() {
+    startTime() {
       if (this.time > 0) {
-        setTimeout(() => {
+        this.count = setTimeout(() => {
           this.time--;
-          this.timer()
-        }, 100)
+          this.startTime()
+        }, 1000)
       } else this.timeOut();
+    },
+
+    stopTime() {
+      clearInterval(this.count);
+      console.log(this.time + ' time');
+      this.onTheClock = !this.onTheClock;
     },
 
     timeOut() {
@@ -109,6 +121,7 @@ export default {
         this.randomise();
       } else {
         this.endRound();
+        this.stopTime();
       }
     },
 
@@ -153,6 +166,9 @@ export default {
     onNextTurn() {
       // Use eventbus to trigger method in Scores component
       EventBus.$emit('nextTurn');
+      // Reset time limit
+      this.time = this.settings.turnTime;
+      this.btnText = 'Go!';
       document.getElementById("gotBtn").disabled = false;
       document.getElementById("passBtn").disabled = false;
       document.getElementById("nextBtn").disabled = true;
@@ -161,11 +177,12 @@ export default {
     onNextRound() {
       this.round++;
       this.betweenRounds = false;
-      document.getElementById("gotBtn").disabled = false;
-      document.getElementById("passBtn").disabled = false;
+      this.btnText = 'Go!';
       this.answer = 'Ready?';
       this.answers = this.answered;
       this.answered = [];
+      document.getElementById("gotBtn").disabled = false;
+      document.getElementById("passBtn").disabled = false;
     }
   }
 }

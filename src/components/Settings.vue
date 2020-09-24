@@ -38,15 +38,17 @@ export default {
   methods: {
     onSubmit() {
       if (this.answers.length >= 3) {
+        // Emit game settings and answers to gameplay component
         let gameSettings = {
             rounds: this.rounds,
             turnTime: this.turnTime
         }
-        //console.log(gameSettings);
         this.$emit('pushSettings', gameSettings);
         let answers = this.answers;
-        //eventBus.$emit('gameplay', gameSettings);
         this.$emit('gameplay', answers);
+        // Disable buttons in gameplay component
+        document.getElementById("passBtn").disabled = true;
+        document.getElementById("nextBtn").disabled = true;
       } else {
         alert("There must be at least 3 items in the colander in order to play. You currently have " + this.answers.length + " items.");
       }

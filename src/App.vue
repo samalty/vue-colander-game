@@ -61,4 +61,14 @@ export default {
 
 <style>
 
+  body{
+    background-color: #abbec7;
+    background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre-big.png");
+  }
+
+  #app{
+    max-width: 500px;
+    height: auto;
+    margin: auto;
+  }
 </style>
