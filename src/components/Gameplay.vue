@@ -1,13 +1,16 @@
 <template>
   <div>
     <div>
-        <p class="round">{{ rounds[round] }}</p>
+      <p class="round">{{ rounds[round] }}</p>
     </div>
     <div>
-        <p class="answers">{{ answer }}</p>
+      <p class="answers">{{ answer }}</p>
     </div>
     <div>
-        <p class="timer" v-bind:class="{ warning: time <= 10 }">{{ time }}</p>
+      <p class="results" v-show="gameOver">{{ result }}</p>
+    </div>
+    <div>
+      <p class="timer" v-bind:class="{ warning: time <= 10 }">{{ time }}</p>
     </div>
     <div class="buttons">
       <button v-on:click="onGo"
@@ -68,7 +71,8 @@ export default {
       canGo: true,
       canPass: false,
       canNextTurn: false,
-      gameOver: false
+      gameOver: false,
+      result: null
     }
   },
   methods: {
@@ -149,18 +153,9 @@ export default {
       if (this.round < this.settings.rounds-1) {
         this.answer = "Colander is empty. Click 'next round' to resume.";
       } else {
+        this.answer = null;
         this.nextBtnText = 'Home';
-        switch (true) {
-          case (this.teamAScore > this.teamBScore):
-            this.answer = 'Game over. Team A wins!';
-            break;
-          case (this.teamAScore < this.teamBScore):
-            this.answer = 'Game over. Team B wins!';
-            break;
-          case (this.teamAScore == this.teamBScore):
-            this.answer = "Game over. It's a draw!";
-            break;
-        }
+        this.gameOver = true;
       }
       this.answerIndex = null;
       this.prevAnswerIndex = null;
@@ -203,6 +198,22 @@ export default {
         // Else reload application for new game
       } else location.reload();
     }
+  },
+  updated() {
+    EventBus.$on('score', (data) => {
+      this.score = data;
+      switch (true) {
+        case (this.score[0] > this.score[1]):
+          this.result = 'Game over. Team A wins!';
+          break;
+        case (this.score[0] < this.score[1]):
+          this.result = 'Game over. Team B wins!';
+          break;
+        case (this.score[0] == this.score[1]):
+          this.result = "Game over. It's a draw!";
+          break;
+      }
+    });
   }
 }
 </script>
@@ -219,6 +230,10 @@ export default {
   .answers,
   .timer{
     font-size: 36px;
+  }
+
+  .results{
+    font-size: 40px;
   }
 
   .warning{

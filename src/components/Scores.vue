@@ -2,11 +2,11 @@
   <div>
     <div class="team team1" v-bind:class="{ active: turn % 2 != 0 }">
         <h5>Team A</h5>
-        <h5>{{ teamAScore }}</h5>
+        <h5>{{ scoreDisplay.teamAScore }}</h5>
     </div>
     <div class="team team2" v-bind:class="{ active: turn % 2 == 0 }">
         <h5>Team B</h5>
-        <h5>{{ teamBScore }}</h5>
+        <h5>{{ scoreDisplay.teamBScore }}</h5>
     </div>
   </div>
 </template>
@@ -18,8 +18,11 @@ export default {
   data() {
     return {
       turn: 1,
-      teamAScore: 0,
-      teamBScore: 0
+      scoreDisplay: {
+        teamAScore: 0,
+        teamBScore: 0
+      },
+      scoreArray: [0,0]
     }
   },
   //methods: {
@@ -30,13 +33,17 @@ export default {
       // Receive current answer from Gameplay component and update score
       this.answer = data;
       if (this.answer != 'Ready?') {
-        this.turn % 2 != 0 ? this.teamAScore++ : this.teamBScore++ ;
+        this.turn % 2 != 0 ? this.scoreDisplay.teamAScore++ : this.scoreDisplay.teamBScore++ ;
+        this.turn % 2 != 0 ? this.scoreArray[0]++ : this.scoreArray[1]++ ;
       }
     });
     EventBus.$on('nextTurn', () => {
       // Update turn when button in gameplay component is clicked
       this.turn++;
     });
+  },
+  updated() {
+    EventBus.$emit('score', this.scoreArray);
   }
 }
 </script>
