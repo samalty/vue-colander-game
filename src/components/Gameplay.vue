@@ -7,7 +7,7 @@
         <p class="answers">{{ answer }}</p>
     </div>
     <div>
-        <p class="timer">{{ time }}</p>
+        <p class="timer" v-bind:class="{ warning: time <= 10 }">{{ time }}</p>
     </div>
     <div class="buttons">
       <button v-on:click="onGo"
@@ -64,7 +64,7 @@ export default {
       betweenRounds: false,
       onTheClock: false,
       time: null,
-      count: undefined,
+      //count: undefined,
       canGo: true,
       canPass: false,
       canNextTurn: false,
@@ -192,6 +192,7 @@ export default {
 
     onNextRound() {
       if (this.round < this.settings.rounds-1) {
+        // Update settings for next round
         this.round++;
         this.betweenRounds = false;
         this.btnText = 'Go!';
@@ -199,6 +200,7 @@ export default {
         this.answers = this.answered;
         this.answered = [];
         this.canPass = false;
+        // Else reload application for new game
       } else location.reload();
     }
   }
@@ -217,6 +219,10 @@ export default {
   .answers,
   .timer{
     font-size: 36px;
+  }
+
+  .warning{
+    color: #cc0000;
   }
 
   .buttons{

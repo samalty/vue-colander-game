@@ -24,7 +24,8 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
+    onSubmit(e) {
+      e.preventDefault();
       if (this.answer) {
         let newAnswer = this.answer;
         this.$emit('pushAnswer', newAnswer);
