@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      if (this.answers.length >= 3) {
+      if (this.answers.length >= 18) {
         // Emit game settings and answers to gameplay component
         let gameSettings = {
           rounds: this.rounds,
@@ -47,7 +47,7 @@ export default {
         let answers = this.answers;
         this.$emit('gameplay', answers);
       } else {
-        alert("There must be at least 3 items in the colander in order to play. You currently have " + this.answers.length + " items.");
+        alert("There must be at least 18 items in the colander in order to play. You currently have " + this.answers.length + " items.");
       }
     }
   }

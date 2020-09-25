@@ -97,7 +97,7 @@ export default {
         this.count = setTimeout(() => {
           this.time--;
           this.startTime()
-        }, 100)
+        }, 1000)
       } else this.timeOut();
     },
 
