@@ -15,9 +15,6 @@
 <script>
 export default {
   name: 'Answers',
-  //props: {
-  //  msg: String
-  //},
   data() {
     return {
       answer: null

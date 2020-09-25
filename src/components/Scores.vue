@@ -25,9 +25,6 @@ export default {
       scoreArray: [0,0]
     }
   },
-  //methods: {
-
-  //},
   created() {
     EventBus.$on('newAnswer', (data) => {
       // Receive current answer from Gameplay component and update score

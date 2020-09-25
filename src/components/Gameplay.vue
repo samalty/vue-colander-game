@@ -67,7 +67,6 @@ export default {
       betweenRounds: false,
       onTheClock: false,
       time: null,
-      //count: undefined,
       canGo: true,
       canPass: false,
       canNextTurn: false,
@@ -82,7 +81,7 @@ export default {
         this.onTheClock = true;
         // Establish time limit if null
         (this.time == null) ? this.time = this.settings.turnTime : '' ;
-        this.btnText = 'Got';
+        this.btnText = 'Got it!';
         this.canPass = true;
         // Call randomise function to return answer and initiate timer
         this.randomise();
@@ -108,6 +107,7 @@ export default {
     },
 
     timeOut() {
+      (this.passed.length > 0) ? this.emptyPass() : '' ;
       this.answer = "Time's up! Next player's turn.";
       this.onTheClock = !this.onTheClock;
       this.canGo = !this.canGo;
@@ -121,26 +121,27 @@ export default {
       this.answer = this.answers[this.answerIndex];
     },
 
+    emptyPass() {
+      // Pass passed answer back into answers array
+      this.answers.push(this.passed[0][0]);
+      this.passed.splice(0, 1);
+    },
+
     onGot() {
       // Emit answer to Scores component to update scores
       EventBus.$emit('newAnswer', this.answer);
-
       // Overwrite prevAnswerIndex for splicing answers array
       this.prevAnswerIndex = this.answerIndex;
-
       // Remove answered item from answers array and push into answered array
       if (this.prevAnswerIndex != null) {
         this.answered.push(this.answers[this.prevAnswerIndex]);
         this.answers.splice(this.prevAnswerIndex, 1);
       }
-
       if (this.answers.length > 0) {
         // Call randomise function to return answer
         this.randomise();
       } else if (this.passed.length > 0) {
-        // Push passed item back into answers if no other remaining items
-        this.answers.push(this.passed[0]);
-        this.passed.splice(0, 1);
+        this.emptyPass();
         this.randomise();
       } else {
         this.endRound();
@@ -148,29 +149,28 @@ export default {
       }
     },
 
-    endRound() {
-      this.betweenRounds = true;
-      if (this.round < this.settings.rounds-1) {
-        this.answer = "Colander is empty. Click 'next round' to resume.";
-      } else {
-        this.answer = null;
-        this.nextBtnText = 'Home';
-        this.gameOver = true;
-      }
-      this.answerIndex = null;
-      this.prevAnswerIndex = null;
-    },
-
     onPass() {
       // Overwrite prevAnswerIndex for splicing answers array
       this.prevAnswerIndex = this.answerIndex;
       // Remove answered item from answered array and push into passed array
       (this.prevAnswerIndex) != null ? this.passed.push(this.answers.splice(this.prevAnswerIndex, 1)) : '' ;
-      console.log(this.passed[0])
       // Call randomise function to return answer
       this.randomise();
       // Disable button to prevent further passes
       this.canPass = !this.canPass;
+    },
+
+    endRound() {
+      this.betweenRounds = true;
+      this.answerIndex = null;
+      this.prevAnswerIndex = null;
+      if (this.round < this.settings.rounds-1) {
+        this.answer = "Colander is empty. Click 'next round' to resume.";
+      } else {
+        this.gameOver = true;
+        this.answer = null;
+        this.nextBtnText = 'Home';
+      }
     },
 
     onNextTurn() {
@@ -181,7 +181,7 @@ export default {
       this.btnText = 'Go!';
       this.answer = 'Ready?';
       this.canGo = !this.canGo;
-      this.canPass = !this.canPass;
+      this.canPass = false;
       this.canNextTurn = !this.canNextTurn;
     },
 
@@ -198,6 +198,7 @@ export default {
         // Else reload application for new game
       } else location.reload();
     }
+
   },
   updated() {
     EventBus.$on('score', (data) => {
