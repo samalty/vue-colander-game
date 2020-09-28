@@ -1,6 +1,6 @@
 # Colander Game
 
-![](vue-colander-game/src/assets/colander3.PNG)
+![](src/assets/colander3.png)
 
 The 'colander game' is a dinner party game which essentially combines articulate with charades, with a couple of other twists thrown in for good measure. The game typically involves drawing pieces of paper from a colander or another bowl-shaped utensil. This simple application enables users to play the colander game on a mobile phone while out and about, eliminating the need for a pad of paper and a colander.
 
