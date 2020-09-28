@@ -20,4 +20,4 @@ The emptying of the colander instigates the beginning of the next round, at whic
 
 ## Try it out
 
-This application is live at: https://samalty.co.uk/colander-game/
+This application is live at: https://samalty.co.uk/vue-colander-game/

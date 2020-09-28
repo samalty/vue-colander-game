@@ -10,7 +10,8 @@
       <p class="results" v-show="gameOver">{{ result }}</p>
     </div>
     <div>
-      <p class="timer" v-bind:class="{ warning: time <= 10 }">{{ time }}</p>
+      <p class="timer" v-bind:class="{ warning: time <= 10 }" 
+                       v-show="showTimer">{{ time }}</p>
     </div>
     <div class="buttons">
       <button v-on:click="onGo"
@@ -71,6 +72,7 @@ export default {
       canPass: false,
       canNextTurn: false,
       gameOver: false,
+      showTimer: true,
       result: null
     }
   },
@@ -109,6 +111,7 @@ export default {
     timeOut() {
       (this.passed.length > 0) ? this.emptyPass() : '' ;
       this.answer = "Time's up! Next player's turn.";
+      this.showTimer = false;
       this.onTheClock = !this.onTheClock;
       this.canGo = !this.canGo;
       this.canPass = false;
@@ -162,6 +165,7 @@ export default {
 
     endRound() {
       this.betweenRounds = true;
+      this.showTimer = false;
       this.answerIndex = null;
       this.prevAnswerIndex = null;
       if (this.round < this.settings.rounds-1) {
@@ -181,6 +185,7 @@ export default {
       this.btnText = 'Go!';
       this.answer = 'Ready?';
       this.canGo = !this.canGo;
+      this.showTimer = true;
       this.canPass = false;
       this.canNextTurn = !this.canNextTurn;
     },
@@ -194,6 +199,7 @@ export default {
         this.answer = 'Ready?';
         this.answers = this.answered;
         this.answered = [];
+        this.showTimer = true;
         this.canPass = false;
         // Else reload application for new game
       } else location.reload();
@@ -264,7 +270,7 @@ export default {
 
   #gotBtn{
     background-image: linear-gradient(#008800, #00b300);
-    width: 99%;
+    width: 98%;
     margin: auto;
     border: 3px solid #00b300;
   }
@@ -276,13 +282,12 @@ export default {
 
   #nextBtn{
     background-image: linear-gradient(#cc7a00, #ff9900);
-    float: right;
     border: 3px solid #ff9900;
   }
 
   #nextRoundBtn{
     background-image: linear-gradient(#cc7a00, #ff9900);
-    width: 99%;
+    width: 98%;
     margin: auto;
     border: 3px solid #ff9900;
   }
