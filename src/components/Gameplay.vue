@@ -110,9 +110,7 @@ export default {
 
     ticktock() {
       const stopwatch = document.getElementById('audio1');
-      if (this.onTheClock == true) {
-        stopwatch.play();
-      } else stopwatch.pause();
+      (this.onTheClock == true) ? stopwatch.play() : stopwatch.pause() ;
     },
 
     stopTime() {
