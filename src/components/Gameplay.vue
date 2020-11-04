@@ -38,8 +38,8 @@
               v-show="betweenRounds">{{ nextBtnText }}</button>
     </div>
     <span class="audio">
-      <audio id="audio1"><source src="../media/stopwatch.wav" type="audio/mpeg"></audio>
-      <audio id="audio2"><source src="../media/alarm.wav" type="audio/mpeg"></audio>
+      <audio id="audio1"><source src="../media/stopwatch.mp3" type="audio/mpeg"></audio>
+      <audio id="audio2"><source src="../media/alarm.mp3" type="audio/mpeg"></audio>
     </span>
   </div>
 </template>
