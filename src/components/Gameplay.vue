@@ -109,6 +109,7 @@ export default {
     },
 
     ticktock() {
+      console.log('tick tock');
       const stopwatch = document.getElementById('audio1');
       (this.onTheClock == true) ? stopwatch.play() : stopwatch.pause() ;
     },
