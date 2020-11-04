@@ -316,8 +316,4 @@ export default {
     transition: 0.5s;
   }
 
-  .audio{
-    display: none;
-  }
-
 </style>
