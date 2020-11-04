@@ -37,7 +37,7 @@
               id="nextRoundBtn"
               v-show="betweenRounds">{{ nextBtnText }}</button>
     </div>
-    <span id="audio">
+    <span class="audio">
       <audio id="audio1"><source src="../media/stopwatch.wav" type="audio/mpeg"></audio>
       <audio id="audio2"><source src="../media/alarm.wav" type="audio/mpeg"></audio>
     </span>
@@ -316,6 +316,10 @@ export default {
   .disabled{
     color: #999999;
     transition: 0.5s;
+  }
+
+  .audio{
+    display: none;
   }
 
 </style>
