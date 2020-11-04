@@ -37,6 +37,10 @@
               id="nextRoundBtn"
               v-show="betweenRounds">{{ nextBtnText }}</button>
     </div>
+    <span id="audio">
+      <audio id="audio1"><source src="../media/stopwatch.wav" type="audio/mpeg"></audio>
+      <audio id="audio2"><source src="../media/alarm.wav" type="audio/mpeg"></audio>
+    </span>
   </div>
 </template>
 
@@ -98,9 +102,17 @@ export default {
       if (this.time > 0) {
         this.count = setTimeout(() => {
           this.time--;
-          this.startTime()
+          this.startTime();
+          this.ticktock();
         }, 1000)
       } else this.timeOut();
+    },
+
+    ticktock() {
+      const stopwatch = document.getElementById('audio1');
+      if (this.onTheClock == true) {
+        stopwatch.play();
+      } else stopwatch.pause();
     },
 
     stopTime() {
@@ -116,6 +128,13 @@ export default {
       this.canGo = !this.canGo;
       this.canPass = false;
       this.canNextTurn = !this.canNextTurn;
+      this.ticktock();
+      this.alarm();
+    },
+
+    alarm() {
+      const alarm = document.getElementById('audio2');
+      alarm.play();
     },
 
     randomise() {
@@ -144,6 +163,7 @@ export default {
         // Call randomise function to return answer
         this.randomise();
       } else if (this.passed.length > 0) {
+        this.onTheClock = false;
         this.emptyPass();
         this.randomise();
       } else {
@@ -168,6 +188,7 @@ export default {
       this.showTimer = false;
       this.answerIndex = null;
       this.prevAnswerIndex = null;
+      this.ticktock();
       if (this.round < this.settings.rounds-1) {
         this.answer = "Colander is empty. Click 'next round' to resume.";
       } else {
