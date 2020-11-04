@@ -92,6 +92,7 @@ export default {
         // Call randomise function to return answer and initiate timer
         this.randomise();
         this.startTime();
+        this.ticktock();
       } else {
         // Call onGot function if round is in progress
         this.onGot();
@@ -103,7 +104,6 @@ export default {
         this.count = setTimeout(() => {
           this.time--;
           this.startTime();
-          this.ticktock();
         }, 1000)
       } else this.timeOut();
     },
@@ -167,6 +167,7 @@ export default {
       } else {
         this.endRound();
         this.stopTime();
+        this.ticktock();
       }
     },
 
@@ -186,7 +187,6 @@ export default {
       this.showTimer = false;
       this.answerIndex = null;
       this.prevAnswerIndex = null;
-      this.ticktock();
       if (this.round < this.settings.rounds-1) {
         this.answer = "Colander is empty. Click 'next round' to resume.";
       } else {
